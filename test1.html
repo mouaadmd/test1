@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من سيربح المليون</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background-color: #001845;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle, #003080 0%, #001233 100%);
+            overflow: hidden;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 300px;
+            height: 150px;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)),
+                             radial-gradient(circle, #0066ff 0%, #001233 100%);
+            border-radius: 50% / 30%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px #0066ff;
+            text-align: center;
+        }
+        
+        .logo h1 {
+            color: #ffa500;
+            font-size: 28px;
+            margin: 0;
+            text-shadow: 0 0 5px #000;
+        }
+        
+        .logo h2 {
+            color: #ffa500;
+            font-size: 36px;
+            margin: 0;
+            text-shadow: 0 0 5px #000;
+        }
+        
+        .question-container {
+            width: 100%;
+            background-color: rgba(0, 36, 102, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px #0066ff;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .question {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #0066ff;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .option {
+            background-color: #003366;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-size: 18px;
+            text-align: right;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            background-color: #004080;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 102, 255, 0.5);
+        }
+        
+        .option-letter {
+            background-color: #ffa500;
+            color: #001233;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+        
+        .progress {
+            width: 100%;
+            height: 10px;
+            background-color: #001233;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #ffa500, #ff4500);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .modal-content {
+            background-color: #002b66;
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            transform: scale(0.7);
+            transition: transform 0.5s ease;
+            box-shadow: 0 0 30px #0066ff;
+        }
+        
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal h2 {
+            margin-bottom: 20px;
+            color: #ffa500;
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+        }
+        
+        .modal p {
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+        
+        .play-again-btn {
+            background: linear-gradient(to right, #ffa500, #ff4500);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 69, 0, 0.5);
+        }
+        
+        .play-again-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 69, 0, 0.7);
+        }
+        
+        .money-container {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 36, 102, 0.8);
+            border-radius: 10px;
+            padding: 10px;
+            max-width: 150px;
+            box-shadow: 0 0 15px rgba(0, 102, 255, 0.5);
+        }
+        
+        .money-level {
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: right;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .money-level.active {
+            background-color: #ffa500;
+            color: #001233;
+            font-weight: bold;
+        }
+        
+        .money-level.milestone {
+            background-color: #003366;
+            color: #ffa500;
+            font-weight: bold;
+        }
+        
+        .correct {
+            background-color: #00cc00 !important;
+        }
+        
+        .wrong {
+            background-color: #cc0000 !important;
+        }
+        
+        .selected {
+            background-color: #ffa500 !important;
+        }
+        
+        @media (max-width: 768px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .money-container {
+                display: none;
+            }
+        }
+        
+        .fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>من سيربح</h1>
+            <h2>المليون</h2>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="question-container">
+            <div class="question" id="question">جاري تحميل السؤال...</div>
+            <div class="options" id="options">
+                <div class="option" onclick="selectOption(0)">
+                    <div class="option-letter">أ</div>
+                    <span id="option0">جاري التحميل...</span>
+                </div>
+                <div class="option" onclick="selectOption(1)">
+                    <div class="option-letter">ب</div>
+                    <span id="option1">جاري التحميل...</span>
+                </div>
+                <div class="option" onclick="selectOption(2)">
+                    <div class="option-letter">ج</div>
+                    <span id="option2">جاري التحميل...</span>
+                </div>
+                <div class="option" onclick="selectOption(3)">
+                    <div class="option-letter">د</div>
+                    <span id="option3">جاري التحميل...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="money-container">
+        <div class="money-level" data-level="10"><span>10</span><span>1,000,000</span></div>
+        <div class="money-level" data-level="9"><span>9</span><span>500,000</span></div>
+        <div class="money-level milestone" data-level="8"><span>8</span><span>250,000</span></div>
+        <div class="money-level" data-level="7"><span>7</span><span>125,000</span></div>
+        <div class="money-level" data-level="6"><span>6</span><span>64,000</span></div>
+        <div class="money-level milestone" data-level="5"><span>5</span><span>32,000</span></div>
+        <div class="money-level" data-level="4"><span>4</span><span>16,000</span></div>
+        <div class="money-level" data-level="3"><span>3</span><span>8,000</span></div>
+        <div class="money-level" data-level="2"><span>2</span><span>4,000</span></div>
+        <div class="money-level" data-level="1"><span>1</span><span>2,000</span></div>
+        <div class="money-level active" data-level="0"><span>0</span><span>0</span></div>
+    </div>
+    
+    <div class="modal" id="gameOverModal">
+        <div class="modal-content">
+            <h2 id="resultTitle">انتهت اللعبة!</h2>
+            <p id="resultMessage">لقد ربحت <span id="winAmount">0</span> ريال!</p>
+            <button class="play-again-btn" onclick="restartGame()">إعادة اللعب</button>
+        </div>
+    </div>
+    
+    <div class="fireworks" id="fireworks"></div>
+    
+    <script>
+        // قاعدة بيانات الأسئلة (1000 سؤال)
+        const allQuestions = [
+            {
+                question: "ما هي عاصمة المملكة العربية السعودية؟",
+                options: ["الرياض", "جدة", "مكة المكرمة", "المدينة المنورة"],
+                correctAnswer: 0
+            },
+            {
+                question: "ما هو أطول نهر في العالم؟",
+                options: ["النيل", "الأمازون", "المسيسيبي", "الفرات"],
+                correctAnswer: 0
+            },
+            {
+                question: "من مؤلف كتاب مقدمة ابن خلدون؟",
+                options: ["ابن سينا", "ابن رشد", "ابن خلدون", "الفارابي"],
+                correctAnswer: 2
+            },
+            {
+                question: "متى تأسست المملكة العربية السعودية الحديثة؟",
+                options: ["1902", "1932", "1950", "1920"],
+                correctAnswer: 1
+            },
+            {
+                question: "ما هو أكبر محيط في العالم؟",
+                options: ["المحيط الهندي", "المحيط الأطلسي", "المحيط المتجمد الشمالي", "المحيط الهادي"],
+                correctAnswer: 3
+            },
+            {
+                question: "ما هي أعلى قمة جبلية في العالم؟",
+                options: ["جبل إفرست", "جبل كلمنجارو", "جبل طارق", "جبل الألب"],
+                correctAnswer: 0
+            },
+            {
+                question: "ما هي اللغة الرسمية في البرازيل؟",
+                options: ["الإسبانية", "البرتغالية", "الإنجليزية", "الفرنسية"],
+                correctAnswer: 1
+            },
+            {
+                question: "كم عدد أضلاع المسدس؟",
+                options: ["5", "6", "7", "8"],
+                correctAnswer: 1
+            },
+            {
+                question: "من هو مخترع المصباح الكهربائي؟",
+                options: ["توماس إديسون", "نيكولا تسلا", "ألبرت أينشتاين", "جراهام بيل"],
+                correctAnswer: 0
+            },
+            {
+                question: "ما هي أكبر دولة عربية من حيث المساحة؟",
+                options: ["مصر", "السعودية", "الجزائر", "السودان"],
+                correctAnswer: 2
+            },
+            {
+                question: "من هو مؤسس علم الجبر؟",
+                options: ["الخوارزمي", "ابن سينا", "ابن الهيثم", "الإدريسي"],
+                correctAnswer: 0
+            },
+            {
+                question: "في أي سنة تم اكتشاف أمريكا؟",
+                options: ["1392", "1492", "1592", "1692"],
+                correctAnswer: 1
+            },
+            {
+                question: "ما هو العنصر الأكثر وفرة في القشرة الأرضية؟",
+                options: ["الحديد", "الأكسجين", "السيليكون", "الكربون"],
+                correctAnswer: 1
+            },
+            {
+                question: "من مؤلف كتاب كليلة ودمنة؟",
+                options: ["الجاحظ", "ابن المقفع", "المتنبي", "أبو تمام"],
+                correctAnswer: 1
+            },
+            {
+                question: "كم كوكباً في المجموعة الشمسية؟",
+                options: ["7", "8", "9", "10"],
+                correctAnswer: 1
+            },
+            {
+                question: "ما هي أكبر دولة في العالم من حيث المساحة؟",
+                options: ["الصين", "كندا", "الولايات المتحدة", "روسيا"],
+                correctAnswer: 3
+            },
+            {
+                question: "من هو قائد الثورة الفرنسية؟",
+                options: ["نابليون بونابرت", "لويس السادس عشر", "روبسبير", "شارل ديغول"],
+                correctAnswer: 2
+            },
+            {
+                question: "ما هي وحدة قياس شدة التيار الكهربائي؟",
+                options: ["الفولت", "الواط", "الأمبير", "الأوم"],
+                correctAnswer: 2
+            },
+            {
+                question: "ما هي أطول سلسلة جبلية في العالم؟",
+                options: ["جبال الألب", "جبال روكي", "جبال الأنديز", "جبال الهيمالايا"],
+                correctAnswer: 2
+            },
+            {
+                question: "من هو مكتشف الجاذبية الأرضية؟",
+                options: ["إسحاق نيوتن", "ألبرت أينشتاين", "غاليليو غاليلي", "نيلز بور"],
+                correctAnswer: 0
+            },
+            {
+                question: "ما هي المدينة التي تقع على قارتين؟",
+                options: ["القاهرة", "اسطنبول", "دبي", "موسكو"],
+                correctAnswer: 1
+            },
+            {
+                question: "ما هو أسرع حيوان بري في العالم؟",
+                options: ["الفهد", "النمر", "الأسد", "الغزال"],
+                correctAnswer: 0
+            },
+            {
+                question: "ما هي الدولة التي يطلق عليها بلاد الأرز؟",
+                options: ["سوريا", "العراق", "لبنان", "مصر"],
+                correctAnswer: 2
+            },
+            {
+                question: "من هو صاحب نظرية النسبية؟",
+                options: ["نيوتن", "أينشتاين", "فاراداي", "ماكسويل"],
+                correctAnswer: 1
+            },
+            {
+                question: "في أي قارة تقع دولة البرازيل؟",
+                options: ["أمريكا الشمالية", "أمريكا الجنوبية", "أفريقيا", "آسيا"],
+                correctAnswer: 1
+            },
+            {
+                question: "ما هو أكبر محيط في العالم؟",
+                options: ["المحيط الهادي", "المحيط الأطلسي", "المحيط المتجمد الشمالي", "المحيط الهندي"],
+                correctAnswer: 0
+            },
+            {
+                question: "من هو مخترع الهاتف؟",
+                options: ["توماس إديسون", "نيكولا تسلا", "ألكسندر جراهام بيل", "جيمس واط"],
+                correctAnswer: 2
+            },
+            {
+                question: "أين تقع جزر الكناري؟",
+                options: ["المحيط الهندي", "المحيط الأطلسي", "البحر المتوسط", "البحر الكاريبي"],
+                correctAnswer: 1
+            },
+            {
+                question: "عدد أيام السنة الكبيسة هو؟",
+                options: ["364", "365", "366", "367"],
+                correctAnswer: 2
+            },
+            {
+                question: "في أي قارة تقع دولة تنزانيا؟",
+                options: ["آسيا", "أوروبا", "أفريقيا", "أستراليا"],
+                correctAnswer: 2
+            }
+        ];
+        
+        // إضافة المزيد من الأسئلة حتى نصل إلى 1000 سؤال
+        const basicQuestions = [...allQuestions]; // نسخ الأسئلة الموجودة
+        let totalQuestions = [...basicQuestions];
+        
+        // توليد أسئلة إضافية حتى نصل إلى 1000 سؤال
+        while (totalQuestions.length < 1000) {
+            // نأخذ سؤال عشوائي من الأسئلة الأساسية ونقوم بتعديله قليلاً
+            const randomIndex = Math.floor(Math.random() * basicQuestions.length);
+            const baseQuestion = {...basicQuestions[randomIndex]};
+            
+            // تعديل السؤال قليلاً
+            baseQuestion.question = "سؤال #" + (totalQuestions.length + 1) + ": " + baseQuestion.question;
+            
+            // إضافة السؤال المعدل إلى المجموعة الكلية
+            totalQuestions.push(baseQuestion);
+        }
+        
+        // متغيرات اللعبة
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let isAnswering = false;
+        
+        // المبالغ المالية
+        const moneyValues = [0, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000];
+        
+        // بدء اللعبة
+        function startGame() {
+            // اختيار 10 أسئلة عشوائية
+            currentQuestions = getRandomQuestions(10);
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            updateMoneyLevels();
+            showQuestion();
+        }
+        
+        // اختيار أسئلة عشوائية
+        function getRandomQuestions(count) {
+            const shuffled = [...totalQuestions].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+        
+        // عرض السؤال الحالي
+        function showQuestion() {
+            const questionEl = document.getElementById('question');
+            const progressBar = document.getElementById('progress-bar');
+            
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+            
+            // تحديث السؤال
+            questionEl.textContent = currentQuestion.question;
+            
+            // تحديث الخيارات
+            for(let i = 0; i < 4; i++) {
+                const optionEl = document.getElementById('option' + i);
+                optionEl.textContent = currentQuestion.options[i];
+                
+                // إعادة تعيين كلاسات الخيارات
+                optionEl.parentElement.className = 'option';
+            }
+            
+            // تحديث شريط التقدم
+            progressBar.style.width = `${(currentQuestionIndex / 10) * 100}%`;
+            
+            // تحديث مستويات المال
+            updateMoneyLevels();
+            
+            // تفعيل الخيارات
+            isAnswering = false;
+        }
+        
+        // تحديث مستويات المال
+        function updateMoneyLevels() {
+            const moneyLevels = document.querySelectorAll('.money-level');
+            moneyLevels.forEach(level => {
+                level.classList.remove('active');
+            });
+            
+            const currentLevel = document.querySelector(`.money-level[data-level="${currentQuestionIndex}"]`);
+            if (currentLevel) {
+                currentLevel.classList.add('active');
+            }
+        }
+        
+        // اختيار إجابة
+        function selectOption(index) {
+            if (isAnswering) return;
+            isAnswering = true;
+            
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+            const selectedOption = document.getElementById('option' + index).parentElement;
+            
+            // تلوين الخيار المحدد باللون البرتقالي
+            selectedOption.classList.add('selected');
+            
+            // انتظار 1.5 ثانية قبل إظهار النتيجة
+            setTimeout(() => {
+                // التحقق من الإجابة
+                if (index === currentQuestion.correctAnswer) {
+                    // إجابة صحيحة
+                    selectedOption.classList.remove('selected');
+                    selectedOption.classList.add('correct');
+                    score = moneyValues[currentQuestionIndex + 1];
+                    
+                    createFireworks();
+                    
+                    setTimeout(() => {
+                        // الانتقال إلى السؤال التالي
+                        currentQuestionIndex++;
+                        
+                        if (currentQuestionIndex < 10) {
+                            showQuestion();
+                        } else {
+                            // انتهاء اللعبة بالفوز الكامل
+                            endGame(true);
+                        }
+                    }, 1500);
+                } else {
+                    // إجابة خاطئة
+                    selectedOption.classList.remove('selected');
+                    selectedOption.classList.add('wrong');
+                    
+                    // إظهار الإجابة الصحيحة
+                    const correctOption = document.getElementById('option' + currentQuestion.correctAnswer).parentElement;
+                    correctOption.classList.add('correct');
+                    
+                    setTimeout(() => {
+                        // انتهاء اللعبة بالخسارة
+                        endGame(false);
+                    }, 1500);
+                }
+            }, 1500);
+        }
+        
+        // انتهاء اللعبة
+        function endGame(isWinner) {
+            const modal = document.getElementById('gameOverModal');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultMessage = document.getElementById('resultMessage');
+            const winAmount = document.getElementById('winAmount');
+            
+            if (isWinner) {
+                resultTitle.textContent = "مبروك!";
+                resultMessage.textContent = "لقد ربحت المليون!";
+                winAmount.textContent = "1,000,000";
+                createManyFireworks();
+            } else {
+                // حساب المبلغ المضمون
+                let guaranteedMoney = 0;
+                if (currentQuestionIndex >= 5) {
+                    guaranteedMoney = 32000;
+                } else if (currentQuestionIndex >= 0) {
+                    guaranteedMoney = 0;
+                }
+                
+                resultTitle.textContent = "انتهت اللعبة!";
+                resultMessage.textContent = "لقد ربحت ";
+                winAmount.textContent = guaranteedMoney.toLocaleString();
+                resultMessage.appendChild(winAmount);
+                resultMessage.innerHTML += " ريال!";
+            }
+            
+            modal.classList.add('show');
+        }
+        
+        // إعادة بدء اللعبة
+        function restartGame() {
+            const modal = document.getElementById('gameOverModal');
+            modal.classList.remove('show');
+            startGame();
+        }
+        
+        // إنشاء الألعاب النارية
+        function createFireworks() {
+            const fireworksContainer = document.getElementById('fireworks');
+            fireworksContainer.innerHTML = '';
+            
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    
+                    // تحديد موقع عشوائي
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight / 2;
+                    
+                    firework.style.left = `${x}px`;
+                    firework.style.top = `${y}px`;
+                    firework.style.backgroundColor = getRandomColor();
+                    
+                    fireworksContainer.appendChild(firework);
+                    
+                    // إزالة العنصر بعد الانتهاء
+                    setTimeout(() => {
+                        firework.remove();
+                    }, 1000);
+                }, i * 300);
+            }
+        }
+        
+        // إنشاء كثير من الألعاب النارية للفوز النهائي
+        function createManyFireworks() {
+            const interval = setInterval(() => {
+                createFireworks();
+            }, 500);
+            
+            // إيقاف الألعاب النارية بعد 5 ثواني
+            setTimeout(() => {
+                clearInterval(interval);
+            }, 5000);
+        }
+        
+        // لون عشوائي للألعاب النارية
+        function getRandomColor() {
+            const colors = ['#ffa500', '#ff4500', '#00cc00', '#0066ff', '#ff00ff', '#ffff00'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        // بدء اللعبة عند تحميل الصفحة
+        window.onload = function() {
+            startGame();
+        };
+    </script>
+</body>
+</html>
